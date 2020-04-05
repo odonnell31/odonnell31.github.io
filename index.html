@@ -1,0 +1,225 @@
+<html>
+
+<!--
+
+	To see this as a webpage, you have to start a *Local Web Server*.
+	
+	There are many ways to do this, but here's how to do it with python:
+
+	- Open terminal
+
+	- 'cd' into the directory where this html file is
+
+	- Type the following into the terminal and hit 'enter':
+		python -m http.server
+
+		your server should read something like: Serving HTTP on 0.0.0.0 port 8000 ...
+
+	- now go to any browser and type in the HTTP address and the filename:
+
+		http://localhost:8000/js_in_webpage.html
+	
+	- You now have a local HTTP server running.
+	
+	- Now, every time you change and save this file you can reload the browser to see your changes
+-->
+
+<head><title>DATA 608, Assignment 5</title></head>
+
+<body>
+
+<h1>Assignment 5, Michael O'Donnell</h1>
+<h2>all functions below are created with Javascript.</h2>
+
+<br>
+
+<script type="text/javascript">
+
+document.write('<p><b>Module 5, Beginner functions</b></p>');
+
+</script>
+
+<p>=============</p>
+
+<script type="text/javascript">
+
+document.write('<br><p>beginner funtion 1:')
+document.write('<br><p>type in a word below...')
+
+// this functions takes a string input and reverses it
+function reverseWord(str) {
+	// first, split the string into chars,
+	// then reverse the chars,
+	// and put the string back together
+	return(str.split("").reverse().join(""));
+}
+
+function calc(){
+	// find the target element
+    var t = document.getElementById("target");
+	
+	// apply the reverseWord function to the input
+    t.innerHTML = reverseWord(document.getElementById('str').value);
+}
+
+</script>
+
+<p>
+<form>
+    <input id="str" type="text" size="15">
+    <input type="button" value="reverse word!" onClick="calc();">
+</form>
+</p>
+
+<div id="target"></div>
+
+<p>=============</p>
+
+<script type="text/javascript">
+
+document.write('<br><p>beginner funtion 2:')
+document.write('<br><p>enter a number, then click the button')
+
+// function to print a 5 row, 4 column table of first 20 multiples of an integer
+function printTable(num) {
+  // get the number we're going to multiply
+  var b = document.getElementById('num').value
+
+  // reference for the target
+  var body = document.getElementById("tabletarget");
+
+  // creates a <table> element and a <tbody> element
+  var tbl = document.createElement("table");
+  var tblBody = document.createElement("tbody");
+
+  // create all cells of the table
+  // first, create the 5 rows
+  for (var i = 0; i < 5; i++) {
+    var row = document.createElement("tr");
+
+	// then, create the 4 columns
+    for (var j = 0; j < 4; j++) {
+	
+      // Create a <td> element and a text node
+      // make text node the contents of the <td>
+	  // and put the <td> at end of each row
+      var cell = document.createElement("td");
+	  
+	  // create the first 20 multiples of any integer:
+	  // (look at the following equation carefully
+	  // to figure out how it creates multiples)
+	  var cellText = document.createTextNode(((i*4)+(j+1))*b);
+      cell.appendChild(cellText);
+      row.appendChild(cell);
+    }
+
+    // add row to the end of the table body
+    tblBody.appendChild(row);
+  }
+
+  // put the <tbody> in the <table>
+  tbl.appendChild(tblBody);
+  
+  // appends <table> into <targettable>
+  body.appendChild(tbl);
+  
+  // sets the border attribute of tbl to 1;
+  tbl.setAttribute("border", "1");
+}
+
+</script>
+
+
+<p>
+<form>
+    <input id="num" type="number" size="4">
+    <input type="button" value="create table" onClick="printTable();">
+</form>
+</p>
+
+<div id="tabletarget"></div>
+
+<p>=============</p>
+
+<br>
+
+<script type="text/javascript">
+
+document.write('<p><b>Module 5, Intermediate functions</b></p>');
+document.write('<p>Choose a CSV file to upload, then filter for a president</p>');
+
+</script>
+
+<p>=============</p>
+
+<script type="text/javascript">
+
+// function to upload a CSV file
+function Upload() {
+
+	// get target element
+	var fileUpload = document.getElementById("fileUpload");
+	
+	// varaible for csv file name
+	var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.csv|.txt)$/;
+	
+	// test if this is a csv file
+	if (regex.test(fileUpload.value.toLowerCase())) {
+	
+		// test if the browser if compatible
+		if (typeof (FileReader) != "undefined") {
+		
+			// read the CSV file
+			var reader = new FileReader();
+			reader.onload = function (e) {
+			
+				// create a new table element
+				var table = document.createElement("table");
+				
+				// split the csv into rows
+				var rows = e.target.result.split("\n");
+				
+				// populate the table
+				for (var i = 0; i < rows.length; i++) {
+					var cells = rows[i].split(",");
+					if (cells.length > 1) {
+						var row = table.insertRow(-1);
+						for (var j = 0; j < cells.length; j++) {
+							var cell = row.insertCell(-1);
+							cell.innerHTML = cells[j];
+						}
+					}
+				}
+				
+				// append rows to the table
+				var dvCSV = document.getElementById("dvCSV");
+				dvCSV.innerHTML = "";
+				dvCSV.appendChild(table);
+			}
+			reader.readAsText(fileUpload.files[0]);
+		
+		// error message if the browser is not compatible
+		} else {
+			alert("This browser does not support HTML5.");
+		}
+	
+	// error message if the file is not a CSV
+	} else {
+		alert("Please upload a valid CSV file.");
+	}
+}
+
+
+</script>
+
+	<input type="file" id="fileUpload" />
+	<br><br>
+	<input id="pres" type="text" value="President last name" size="25">
+	<input type="button" id="upload" value="Submit" onclick="Upload()" />
+	<hr />
+	
+<div id="dvCSV"> </div>
+
+
+</body>
+</html>
